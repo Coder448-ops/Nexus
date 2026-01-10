@@ -1,23 +1,14 @@
-# 👑 Nexus Sovereign: Master Ultimate Edition
+# 👑 Nexus Sovereign Official
 
-**Nexus Sovereign** — bu professional dizayn xizmatlari va aqlli AI yordamchini o'z ichiga olgan innovatsion platforma. Loyiha Master nazorati ostida boshqariladi.
+**Nexus Sovereign** — bu yuqori sifatli dizayn xizmatlari va aqlli texnologiyalarni birlashtirgan innovatsion platforma.
 
-## 🚀 Xususiyatlari
-* **Professional Branding:** Logo va Banner xizmatlari.
-* **Master Core AI:** O'rnatilgan aqlli yordamchi (Normal, Toxic va Cringe rejimlari bilan).
-* **Admin Control:** Maxsus PIN (99) orqali boshqariladigan master panel.
-* **Advanced Search:** Admin uchun maxsus 18+ qidiruv tizimi (Aynan yozilgan so'z bo'yicha).
-* **SEO Optimized:** Google va boshqa qidiruv tizimlari uchun to'liq moslashtirilgan.
+## ✨ Xizmatlarimiz
+* **Professional Branding:** Shaxsiy va biznes uchun logotiplar tayyorlash.
+* **Creative Banners:** Ijtimoiy tarmoqlar va reklama uchun bannerlar.
+* **AI Assistant:** Foydalanuvchilar uchun aqlli yordamchi tizimi.
 
-## 🛠 Texnologiyalar
-* **HTML5 / CSS3** (Tailwind CSS ishlatilgan).
-* **JavaScript** (LocalDB va Custom AI Logic).
-* **FontAwesome** ikonkalari.
-
-## 🔑 Foydalanish
-1. Saytga kiring.
-2. Oddiy foydalanuvchi sifatida AI bilan muloqot qiling yoki xizmatlarni ko'ring.
-3. **Master Panelga** kirish uchun "Crown" (toj) belgisi orqali PIN kodni kiriting.
+## 🛠 Texnik qism
+Ushbu loyiha zamonaviy HTML5, CSS3 (Tailwind) va JavaScript texnologiyalari asosida qurilgan. Foydalanuvchi interfeysi (UI) maksimal darajada qulay va tezkor ishlashga moslashtirilgan.
 
 ---
 *© 2026 Nexus Sovereign. Barcha huquqlar Master tomonidan himoyalangan.*
