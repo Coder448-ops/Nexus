@@ -2,95 +2,175 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexus Sovereign | Official</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Sovereign | Gateway</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Orbitron:wght@900&display=swap');
         body { background: #000; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
-        .card { background: linear-gradient(145deg, #0a0a0a, #111); border: 1px solid #222; border-radius: 25px; padding: 25px; margin-bottom: 20px; transition: 0.3s; }
-        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(15px); }
-        .nav-btn { font-size: 22px; color: #444; transition: 0.3s; cursor: pointer; }
-        .active-nav { color: #3b82f6; }
+        
+        /* Glassmorphism & UI Elements */
+        .glass { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nexus-card { background: #080808; border: 1px solid #111; border-radius: 25px; padding: 25px; transition: 0.3s; }
+        .nexus-input { background: #0a0a0a; border: 1px solid #222; border-radius: 18px; padding: 16px; width: 100%; color: #fff; outline: none; transition: 0.3s; }
+        .nexus-input:focus { border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.1); }
+        
+        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        #offline-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     </style>
 </head>
-<body class="p-6 pb-28">
+<body class="p-4 pb-28">
 
-    <header class="fixed top-0 left-0 w-full z-50 p-5 flex justify-between items-center bg-black/80 border-b border-white/5 backdrop-blur-md">
-        <h1 class="font-black text-blue-500 uppercase text-xs tracking-[0.2em] italic">Nexus Sovereign</h1>
-        <div class="bg-blue-600/10 px-5 py-2 rounded-2xl border border-blue-500/30 text-blue-500 font-black flex items-center gap-2">
-            <span id="cr-tag" class="text-lg">0</span>
-            <span class="text-[10px] opacity-60">CR</span>
-        </div>
-    </header>
+    <div id="offline-screen">
+        <i class="fas fa-shield-virus text-red-600 text-6xl mb-6 animate-pulse"></i>
+        <h1 style="font-family: 'Orbitron', sans-serif;" class="text-2xl font-black text-red-600 tracking-[0.3em]">SYSTEM OFFLINE</h1>
+        <p class="text-gray-600 text-[10px] uppercase mt-4 tracking-widest">Master buyrug'i bilan tizim vaqtincha to'xtatildi</p>
+    </div>
 
-    <main class="mt-24 max-w-lg mx-auto">
-        <div class="mb-10">
-            <h2 class="text-[11px] font-black uppercase opacity-30 mb-6 tracking-[0.3em]">Mavjud Xizmatlar</h2>
-            
-            <div class="card flex justify-between items-center border-l-4 border-l-blue-600">
-                <div>
-                    <h3 class="font-black text-base uppercase italic tracking-tight">Standard Logo</h3>
-                    <p class="text-[10px] opacity-40 mt-1">Professional Vector Design</p>
+    <div id="auth-screen">
+        <div class="w-full max-w-sm nexus-card">
+            <div id="login-box">
+                <h2 class="text-2xl font-black mb-6 text-blue-500 italic uppercase">Nexus Login</h2>
+                <div class="space-y-4">
+                    <input type="text" id="l-id" class="nexus-input" placeholder="User ID">
+                    <input type="password" id="l-pass" class="nexus-input" placeholder="Password">
+                    <button onclick="login()" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-xs tracking-[0.2em] active:scale-95 transition">Access System</button>
+                    <div class="flex justify-between px-2">
+                        <span onclick="toggleAuth()" class="text-[10px] text-blue-400 font-bold uppercase cursor-pointer">Ro'yxatdan o'tish</span>
+                        <span onclick="window.open('https://t.me/SizningLink')" class="text-[10px] text-gray-600 font-bold uppercase cursor-pointer">Parolni unutdingizmi?</span>
+                    </div>
                 </div>
-                <button onclick="buy(100)" class="bg-blue-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-90 transition">100 CR</button>
             </div>
 
-            <div class="card flex justify-between items-center border-l-4 border-l-purple-600">
-                <div>
-                    <h3 class="font-black text-base uppercase italic tracking-tight text-purple-500">Logo + Banner</h3>
-                    <p class="text-[10px] opacity-40 mt-1">Full Branding Identity</p>
+            <div id="signup-box" style="display: none;">
+                <h2 class="text-2xl font-black mb-6 text-emerald-500 italic uppercase">New Identity</h2>
+                <div class="space-y-4">
+                    <input type="text" id="s-name" class="nexus-input" placeholder="To'liq ismingiz">
+                    <input type="text" id="s-id" class="nexus-input" placeholder="ID tanlang (masalan: user7)">
+                    <input type="password" id="s-pass" class="nexus-input" placeholder="Parol yarating">
+                    <button onclick="signup()" class="w-full bg-emerald-600 py-4 rounded-2xl font-black uppercase text-xs tracking-[0.2em] active:scale-95 transition">Yaratish va Kirish</button>
+                    <p onclick="toggleAuth()" class="text-center text-[10px] text-gray-600 font-bold uppercase cursor-pointer">Loginga qaytish</p>
                 </div>
-                <button onclick="buy(250)" class="bg-purple-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-90 transition">250 CR</button>
             </div>
-        </div>
-    </main>
-
-    <div id="modal" onclick="this.style.display='none'">
-        <div class="bg-[#0a0a0a] border border-white/10 p-10 rounded-[40px] text-center w-full max-w-sm" onclick="event.stopPropagation()">
-            <div class="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
-                <i class="fas fa-wallet text-2xl text-blue-500"></i>
-            </div>
-            <h3 class="font-black text-xl mb-3">Balansni To'ldirish</h3>
-            <p class="text-[11px] opacity-40 mb-8 leading-relaxed">Sizning balansingizda yetarli kredit mavjud emas. To'ldirish uchun Masterga murojaat qiling.</p>
-            <button onclick="window.open('https://t.me/SizningTelegram', '_blank')" class="w-full bg-blue-600 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest">Master bilan bog'lanish</button>
         </div>
     </div>
 
-    <nav class="fixed bottom-0 left-0 w-full h-24 bg-black/90 border-t border-white/5 flex justify-center gap-20 items-center z-50 backdrop-blur-lg">
-        <div class="nav-btn active-nav" onclick="location.reload()"><i class="fas fa-home"></i></div>
-        <div class="nav-btn" onclick="document.getElementById('modal').style.display='flex'"><i class="fas fa-gem"></i></div>
-    </nav>
+    <div id="main-ui" style="display: none;">
+        <header class="fixed top-0 left-0 w-full p-5 flex justify-between items-center glass z-50">
+            <div>
+                <h1 id="u-name" class="font-black text-sm uppercase italic text-blue-500">Master</h1>
+                <p id="u-id-display" class="text-[8px] opacity-40 font-mono"></p>
+            </div>
+            <div class="bg-blue-600/10 px-4 py-2 rounded-xl border border-blue-500/20 text-blue-500 font-black">
+                <span id="u-cr" class="text-lg">0</span> <span class="text-[10px] opacity-50">CR</span>
+            </div>
+        </header>
+
+        <main class="mt-24 space-y-4 max-w-lg mx-auto">
+            <div id="global-msg-box" class="hidden bg-blue-600/10 border border-blue-500/20 p-4 rounded-2xl animate-pulse">
+                <p class="text-[10px] text-blue-500 font-black uppercase mb-1">E'lon:</p>
+                <p id="global-text" class="text-xs text-gray-300"></p>
+            </div>
+
+            <h2 class="text-[10px] font-black uppercase opacity-30 tracking-[0.3em] mb-4">Xizmatlar</h2>
+            
+            <div class="nexus-card flex justify-between items-center border-l-4 border-l-blue-600">
+                <div><h3 class="font-black text-sm uppercase">Standard Logo</h3><p class="text-[9px] opacity-40">Yetkazib berish: 24 soat</p></div>
+                <button onclick="buy(100)" class="bg-blue-600 px-6 py-2 rounded-xl text-[10px] font-black">100 CR</button>
+            </div>
+
+            <div class="nexus-card flex justify-between items-center border-l-4 border-l-purple-600">
+                <div><h3 class="font-black text-sm uppercase text-purple-500">Logo + Banner</h3><p class="text-[9px] opacity-40">Yetkazib berish: 12 soat</p></div>
+                <button onclick="buy(250)" class="bg-purple-600 px-6 py-2 rounded-xl text-[10px] font-black">250 CR</button>
+            </div>
+        </main>
+
+        <nav class="fixed bottom-0 left-0 w-full h-20 glass flex justify-around items-center z-50">
+            <div class="text-blue-600 text-xl"><i class="fas fa-home"></i></div>
+            <div onclick="location.reload()" class="text-gray-600 text-xl"><i class="fas fa-power-off"></i></div>
+        </nav>
+    </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('nexus_v11')) || { cr: 0, mode: 'normal' };
+        let users = JSON.parse(localStorage.getItem('nexus_users')) || {};
+        let session = null;
+
+        function toggleAuth() {
+            document.getElementById('login-box').style.display = document.getElementById('login-box').style.display === 'none' ? 'block' : 'none';
+            document.getElementById('signup-box').style.display = document.getElementById('signup-box').style.display === 'none' ? 'block' : 'none';
+        }
+
+        function signup() {
+            const name = document.getElementById('s-name').value, id = document.getElementById('s-id').value.trim(), pass = document.getElementById('s-pass').value;
+            if(!name || !id || !pass) return alert("Barcha maydonlarni to'ldiring!");
+            if(users[id]) return alert("Bu ID allaqachon mavjud!");
+            users[id] = { name: name, pass: pass, cr: 0, status: 'active' };
+            save(); session = id; enterSystem();
+        }
+
+        function login() {
+            const id = document.getElementById('l-id').value.trim(), pass = document.getElementById('l-pass').value;
+            if(users[id] && users[id].pass === pass) {
+                if(users[id].status === 'banned') return alert("Sizning hisobingiz bloklangan!");
+                session = id; enterSystem();
+            } else { alert("ID yoki parol xato!"); }
+        }
+
+        function enterSystem() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('main-ui').style.display = 'block';
+            sync();
+        }
 
         function sync() {
-            document.getElementById('cr-tag').innerText = db.cr;
-            localStorage.setItem('nexus_v11', JSON.stringify(db));
-        }
+            // Admin paneldagi o'zgarishlarni tekshirish
+            users = JSON.parse(localStorage.getItem('nexus_users'));
+            const status = localStorage.getItem('nexus_status');
+            const gMsg = localStorage.getItem('global_msg');
 
-        function buy(p) {
-            if(db.cr >= p) {
-                db.cr -= p;
-                sync();
-                alert("✅ Buyurtma Masterga yuborildi!");
+            // 1. System Online/Offline Check
+            if(status === 'offline') {
+                document.getElementById('offline-screen').style.display = 'flex';
+                return;
             } else {
-                document.getElementById('modal').style.display = 'flex';
+                document.getElementById('offline-screen').style.display = 'none';
+            }
+
+            // 2. User Ban Check
+            if(session && users[session].status === 'banned') {
+                alert("ACCOUNT TERMINATED BY MASTER.");
+                location.reload();
+            }
+
+            // 3. Update UI
+            if(session) {
+                const u = users[session];
+                document.getElementById('u-name').innerText = u.name;
+                document.getElementById('u-cr').innerText = u.cr;
+                document.getElementById('u-id-display').innerText = "@" + session;
+            }
+
+            // 4. Global Message Check
+            if(gMsg) {
+                document.getElementById('global-msg-box').classList.remove('hidden');
+                document.getElementById('global-text').innerText = gMsg;
             }
         }
 
-        // Admin o'zgarishlarini kuzatish
-        setInterval(() => {
-            let latest = JSON.parse(localStorage.getItem('nexus_v11'));
-            if(latest && latest.cr !== db.cr) {
-                db = latest;
-                sync();
-            }
-        }, 1000);
+        function buy(price) {
+            if(users[session].cr >= price) {
+                users[session].cr -= price;
+                save(); sync();
+                alert("Buyurtma qabul qilindi!");
+            } else { alert("Mablag' yetarli emas!"); }
+        }
 
-        window.onload = sync;
+        function save() { localStorage.setItem('nexus_users', JSON.stringify(users)); }
+        
+        // Har 2 soniyada admin buyruqlarini tekshirib turadi
+        setInterval(sync, 2000);
+        sync();
     </script>
 </body>
 </html>
