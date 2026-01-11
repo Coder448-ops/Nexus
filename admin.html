@@ -2,140 +2,173 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>Nexus Sovereign | Multi-User Control</title>
+    <title>Nexus Sovereign | Absolute Control</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-        body { background: #000; color: #00ff00; font-family: 'Fira Code', monospace; }
-        .term-container { border: 2px solid #111; border-radius: 15px; height: 80vh; display: flex; flex-direction: column; background: #050505; }
-        .logs { flex: 1; overflow-y: auto; padding: 20px; font-size: 13px; color: #aaa; }
-        .input-line { display: flex; align-items: center; padding: 15px; background: #080808; border-top: 1px solid #111; }
-        .cmd-in { background: transparent; border: none; outline: none; color: #fff; flex: 1; margin-left: 10px; }
-        .user-tag { color: #3b82f6; font-weight: bold; }
-        .highlight { color: #ff00ff; }
+        body { background: #000; color: #00ff00; font-family: 'Fira Code', monospace; overflow: hidden; height: 100vh; }
+        #terminal { height: 85vh; background: #020202; border: 1px solid #111; border-radius: 10px; display: flex; flex-direction: column; }
+        .logs { flex: 1; overflow-y: auto; padding: 20px; font-size: 13px; line-height: 1.6; }
+        .input-line { background: #050505; padding: 15px; border-top: 1px solid #111; display: flex; align-items: center; }
+        input { background: transparent; border: none; outline: none; color: #fff; flex: 1; margin-left: 10px; font-family: inherit; }
+        .prompt { color: #3b82f6; }
+        #auth { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .user-id { color: #f472b6; }
+        .cmd-text { color: #fbbf24; }
     </style>
 </head>
-<body class="p-6">
+<body class="p-4">
 
-    <div id="auth" class="fixed inset-0 bg-black z-[100] flex items-center justify-center">
-        <input type="password" id="pin" onchange="login()" class="bg-transparent border-b-2 border-green-900 text-center text-3xl outline-none" placeholder="MASTER PIN">
+    <div id="auth">
+        <div class="text-center">
+            <h1 class="text-2xl font-bold text-red-600 mb-6 tracking-[1em]">SYSTEM LOCK</h1>
+            <input type="password" id="pin" class="bg-transparent border-b border-red-900 text-center text-3xl outline-none w-32" onchange="unlock()">
+        </div>
     </div>
 
     <div id="ui" style="display: none;">
-        <div class="flex justify-between mb-4">
-            <h1 class="font-bold text-blue-500 uppercase tracking-widest">Master Multi-User Console v12.0</h1>
-            <div id="current-user" class="text-xs text-gray-500">Selected User: <span class="text-white" id="sel-u">None</span></div>
+        <div class="flex justify-between items-center mb-2 px-2">
+            <div class="text-[10px] uppercase opacity-50 tracking-widest">Sovereign OS v14.0 // Root Access</div>
+            <div class="text-xs text-blue-500">Active: <span id="target" class="text-white">None</span></div>
         </div>
 
-        <div class="term-container">
-            <div id="logs" class="logs">
-                <div class="text-green-500">>> NEXUS SOVEREIGN SYSTEM ONLINE.</div>
-                <div class="text-gray-600">>> Type 'list' to see all users or 'help' for full commands.</div>
+        <div id="terminal">
+            <div id="logs" class="logs space-y-1">
+                <div class="text-blue-500 font-bold">>>> NEXUS SOVEREIGN CORE INITIALIZED.</div>
+                <div class="text-gray-500 italic">>>> Barcha tizimlar nazorat ostida. 'help' deb yozing.</div>
             </div>
             <div class="input-line">
-                <span class="text-blue-500">master@nexus:~$</span>
-                <input type="text" id="cmd" class="cmd-in" autofocus>
+                <span class="prompt">root@nexus:~#</span>
+                <input type="text" id="cmd" autofocus spellcheck="false" autocomplete="off">
             </div>
         </div>
     </div>
 
     <script>
-        // Foydalanuvchilar bazasi (Simulyatsiya)
-        let users = JSON.parse(localStorage.getItem('nexus_users')) || {
-            "user1": { name: "Oddiy User", cr: 0, status: "active" },
-            "user2": { name: "VIP Klient", cr: 1000, status: "active" }
-        };
-        let selectedUser = null;
+        let users = JSON.parse(localStorage.getItem('nexus_users')) || {};
+        let selected = null;
 
-        function login() {
+        function unlock() {
             if(document.getElementById('pin').value === "99") {
                 document.getElementById('auth').style.display = 'none';
                 document.getElementById('ui').style.display = 'block';
+                document.getElementById('cmd').focus();
             }
         }
 
-        function print(txt, color = "text-gray-400") {
-            const logs = document.getElementById('logs');
-            logs.innerHTML += `<div class="${color}">>> ${txt}</div>`;
-            logs.scrollTop = logs.scrollHeight;
+        function print(txt, type = "") {
+            const l = document.getElementById('logs');
+            const colors = { 
+                err: "text-red-500", 
+                ok: "text-emerald-500", 
+                warn: "text-yellow-500", 
+                info: "text-blue-400" 
+            };
+            l.innerHTML += `<div class="${colors[type] || 'text-gray-400'}">>> ${txt}</div>`;
+            l.scrollTop = l.scrollHeight;
         }
 
         document.getElementById('cmd').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                let val = this.value.trim();
-                let lower = val.toLowerCase();
+                let raw = this.value.trim();
+                let lower = raw.toLowerCase();
                 this.value = '';
-                print(val, "text-blue-400");
+                print(raw, "info");
 
-                // 1. BUYRUQLAR RO'YXATI (Kengaytirilgan)
-                if(lower === 'help') {
+                // --- KOMANDALAR ---
+
+                if (lower === 'help') {
                     print(`
-                        --- COMMAND CENTER ---<br>
-                        • <b>list</b> - Barcha foydalanuvchilarni ko'rish<br>
-                        • <b>select [id]</b> - Userni boshqarish uchun tanlash<br>
-                        • <b>add cr [son]</b> - Tanlangan userga pul qo'shish<br>
-                        • <b>set name [text]</b> - User ismini o'zgartirish<br>
-                        • <b>ban / unban</b> - Userni bloklash/ochish<br>
-                        • <b>mode toxic/normal</b> - Tizim rejimini o'zgartirish<br>
-                        • <b>color [blue/red/gold]</b> - Sayt asosiy rangini o'zgartirish<br>
-                        • <b>clear</b> - Terminalni tozalash<br>
-                        • <b>search [text]</b> - Maxfiy Deep Search
-                    `, "text-yellow-500");
+                        --- [ FULL CONTROL MENU ] ---<br>
+                        • <span class="cmd-text">list</span> - Barcha userlar ma'lumotlari<br>
+                        • <span class="cmd-text">select [id]</span> - Userni tanlash<br>
+                        • <span class="cmd-text">add cr [son]</span> - Kredit qo'shish<br>
+                        • <span class="cmd-text">set pass [parol]</span> - Parolni yangilash<br>
+                        • <span class="cmd-text">show pass</span> - Tanlangan user paroli<br>
+                        • <span class="cmd-text">ban [id]</span> - Tizimdan haydash<br>
+                        • <span class="cmd-text">unban [id]</span> - Blokdan chiqarish<br>
+                        • <span class="cmd-text">delete user [id]</span> - Userni butkul o'chirish<br>
+                        • <span class="cmd-text">mode toxic/normal</span> - Global tizim rejimi<br>
+                        • <span class="cmd-text">msg [text]</span> - Hamma userlarga e'lon<br>
+                        • <span class="cmd-text">search [text]</span> - Deep Search<br>
+                        • <span class="cmd-text">clear</span> - Konsolni tozalash
+                    `, "warn");
                 }
 
-                // 2. USERLARNI RO'YXATI
-                else if(lower === 'list') {
-                    print("USERS FOUND IN DATABASE:");
+                else if (lower === 'list') {
+                    print("USER DATABASE:");
                     for(let id in users) {
-                        print(`ID: <span class="user-tag">${id}</span> | Name: ${users[id].name} | Balans: ${users[id].cr} CR`, "text-gray-300");
+                        let st = users[id].status === 'banned' ? '🔴 BANNED' : '🟢 ACTIVE';
+                        print(`ID: <span class="user-id">${id}</span> | CR: ${users[id].cr} | PWD: ${users[id].pass} | ST: ${st}`);
                     }
                 }
 
-                // 3. USERNI TANLASH
-                else if(lower.startsWith('select ')) {
+                else if (lower.startsWith('select ')) {
                     let id = lower.split(' ')[1];
                     if(users[id]) {
-                        selectedUser = id;
-                        document.getElementById('sel-u').innerText = users[id].name;
-                        print(`USER ${id.toUpperCase()} SELECTED. Endi barcha buyruqlar bunga ta'sir qiladi.`, "text-green-500");
-                    } else { print("XATO: Bunday ID mavjud emas!", "text-red-500"); }
+                        selected = id;
+                        document.getElementById('target').innerText = id;
+                        print(`User [${id}] boshqaruvga olindi.`, "ok");
+                    } else { print("User topilmadi!", "err"); }
                 }
 
-                // 4. PUL QO'SHISH (Tanlangan userga)
-                else if(lower.startsWith('add cr ')) {
-                    if(!selectedUser) return print("AVVAL USERNI TANLANG (select [id])", "text-red-500");
-                    let amount = parseInt(lower.replace('add cr ', ''));
-                    users[selectedUser].cr += amount;
-                    save();
-                    print(`SUCCESS: ${users[selectedUser].name} balansiga ${amount} CR qo'shildi.`);
+                else if (lower.startsWith('add cr ')) {
+                    if(!selected) return print("Avval user tanlang!", "err");
+                    let n = parseInt(lower.replace('add cr ', ''));
+                    users[selected].cr += n;
+                    save(); print(`${n} CR qo'shildi. Umumiy: ${users[selected].cr}`, "ok");
                 }
 
-                // 5. ISMNI O'ZGARTIRISH
-                else if(lower.startsWith('set name ')) {
-                    if(!selectedUser) return print("AVVAL USERNI TANLANG", "text-red-500");
-                    let newName = val.substring(9);
-                    users[selectedUser].name = newName;
-                    save();
-                    print(`RENAME: User ismi '${newName}' ga o'zgartirildi.`);
+                else if (lower.startsWith('set pass ')) {
+                    if(!selected) return print("User tanlang!", "err");
+                    users[selected].pass = raw.substring(9);
+                    save(); print("Parol o'zgartirildi.", "ok");
                 }
 
-                // 6. BLOKLASH
-                else if(lower === 'ban') {
-                    if(!selectedUser) return;
-                    users[selectedUser].status = "banned";
-                    save();
-                    print(`USER ${selectedUser} SYSTEMDAN BLOKLANDI!`, "text-red-600 font-bold");
+                else if (lower === 'show pass') {
+                    if(!selected) return;
+                    print(`User: ${selected} | Parol: ${users[selected].pass}`, "warn");
                 }
 
-                // 7. MAXFIY QIDIRUV
-                else if(lower.startsWith('search ')) {
-                    let q = val.substring(7);
-                    print(`SEARCHING DEEP WEB FOR: ${q}...`, "text-purple-500");
-                    window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}&tbm=vid`);
+                else if (lower.startsWith('ban ')) {
+                    let id = lower.split(' ')[1];
+                    if(users[id]) { users[id].status = 'banned'; save(); print(`${id} bloklandi!`, "err"); }
                 }
 
-                else if(lower === 'clear') { document.getElementById('logs').innerHTML = ''; }
-                else { print("ERROR: Buyruq xato. 'help' deb yozing.", "text-red-400"); }
+                else if (lower.startsWith('unban ')) {
+                    let id = lower.split(' ')[1];
+                    if(users[id]) { users[id].status = 'active'; save(); print(`${id} blokdan ochildi.`, "ok"); }
+                }
+
+                else if (lower.startsWith('delete user ')) {
+                    let id = lower.split(' ')[2];
+                    if(users[id]) { delete users[id]; save(); print(`${id} bazadan o'chirildi!`, "err"); }
+                }
+
+                else if (lower === 'mode toxic') {
+                    localStorage.setItem('nexus_mode', 'toxic');
+                    print("GLOBAL: TOXIC MODE ACTIVATED", "err");
+                }
+
+                else if (lower === 'mode normal') {
+                    localStorage.setItem('nexus_mode', 'normal');
+                    print("GLOBAL: NORMAL MODE RESTORED", "ok");
+                }
+
+                else if (lower.startsWith('msg ')) {
+                    localStorage.setItem('global_msg', raw.substring(4));
+                    print("GLOBAL MESSAGE SENT.", "ok");
+                }
+
+                else if (lower.startsWith('search ')) {
+                    print("Searching Deep Web...");
+                    window.open(`https://www.google.com/search?q=${encodeURIComponent(raw.substring(7))}&tbm=vid`);
+                }
+
+                else if (lower === 'clear') { document.getElementById('logs').innerHTML = ''; }
+                
+                else { print("Noma'lum buyruq. 'help' deb yozing.", "err"); }
             }
         });
 
