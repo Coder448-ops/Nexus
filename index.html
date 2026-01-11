@@ -10,17 +10,15 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
         body { background: #000; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         .card { background: linear-gradient(145deg, #0a0a0a, #111); border: 1px solid #222; border-radius: 25px; padding: 25px; margin-bottom: 20px; transition: 0.3s; }
-        .card:hover { border-color: #3b82f6; transform: translateY(-5px); }
-        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
+        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(15px); }
         .nav-btn { font-size: 22px; color: #444; transition: 0.3s; cursor: pointer; }
-        .nav-btn:hover { color: #3b82f6; }
         .active-nav { color: #3b82f6; }
     </style>
 </head>
 <body class="p-6 pb-28">
 
     <header class="fixed top-0 left-0 w-full z-50 p-5 flex justify-between items-center bg-black/80 border-b border-white/5 backdrop-blur-md">
-        <h1 class="font-black text-blue-500 uppercase text-sm tracking-[0.2em] italic">Nexus Sovereign</h1>
+        <h1 class="font-black text-blue-500 uppercase text-xs tracking-[0.2em] italic">Nexus Sovereign</h1>
         <div class="bg-blue-600/10 px-5 py-2 rounded-2xl border border-blue-500/30 text-blue-500 font-black flex items-center gap-2">
             <span id="cr-tag" class="text-lg">0</span>
             <span class="text-[10px] opacity-60">CR</span>
@@ -29,53 +27,43 @@
 
     <main class="mt-24 max-w-lg mx-auto">
         <div class="mb-10">
-            <h2 class="text-[11px] font-black uppercase opacity-40 mb-6 tracking-[0.3em]">Premium Portfolio Services</h2>
+            <h2 class="text-[11px] font-black uppercase opacity-30 mb-6 tracking-[0.3em]">Mavjud Xizmatlar</h2>
             
             <div class="card flex justify-between items-center border-l-4 border-l-blue-600">
                 <div>
                     <h3 class="font-black text-base uppercase italic tracking-tight">Standard Logo</h3>
-                    <p class="text-[10px] opacity-40 mt-1">High-Quality Vector Design</p>
+                    <p class="text-[10px] opacity-40 mt-1">Professional Vector Design</p>
                 </div>
-                <button onclick="buy(100)" class="bg-blue-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition active:scale-90">100 CR</button>
+                <button onclick="buy(100)" class="bg-blue-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-90 transition">100 CR</button>
             </div>
 
             <div class="card flex justify-between items-center border-l-4 border-l-purple-600">
                 <div>
                     <h3 class="font-black text-base uppercase italic tracking-tight text-purple-500">Logo + Banner</h3>
-                    <p class="text-[10px] opacity-40 mt-1">Full Branding Identity Pack</p>
+                    <p class="text-[10px] opacity-40 mt-1">Full Branding Identity</p>
                 </div>
-                <button onclick="buy(250)" class="bg-purple-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-700 transition active:scale-90">250 CR</button>
-            </div>
-
-            <div class="card flex justify-between items-center border-l-4 border-l-emerald-600">
-                <div>
-                    <h3 class="font-black text-base uppercase italic tracking-tight text-emerald-500">Social Kit</h3>
-                    <p class="text-[10px] opacity-40 mt-1">Profiles & Story Templates</p>
-                </div>
-                <button onclick="buy(150)" class="bg-emerald-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition active:scale-90">150 CR</button>
+                <button onclick="buy(250)" class="bg-purple-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-90 transition">250 CR</button>
             </div>
         </div>
     </main>
 
     <div id="modal" onclick="this.style.display='none'">
         <div class="bg-[#0a0a0a] border border-white/10 p-10 rounded-[40px] text-center w-full max-w-sm" onclick="event.stopPropagation()">
-            <div class="w-20 h-20 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/30">
-                <i class="fas fa-gem text-3xl text-blue-500"></i>
+            <div class="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/20">
+                <i class="fas fa-wallet text-2xl text-blue-500"></i>
             </div>
             <h3 class="font-black text-xl mb-3">Balansni To'ldirish</h3>
-            <p class="text-xs opacity-40 mb-8 leading-relaxed">Sizning balansingizda mablag' yetarli emas. Kredit sotib olish uchun Master bilan bog'laning.</p>
-            <button onclick="window.open('https://t.me/SizningTelegramLink', '_blank')" class="w-full bg-blue-600 py-5 rounded-[25px] font-black uppercase text-[11px] tracking-widest hover:shadow-lg hover:shadow-blue-600/20 transition">Masterga yozish</button>
+            <p class="text-[11px] opacity-40 mb-8 leading-relaxed">Sizning balansingizda yetarli kredit mavjud emas. To'ldirish uchun Masterga murojaat qiling.</p>
+            <button onclick="window.open('https://t.me/SizningTelegram', '_blank')" class="w-full bg-blue-600 py-5 rounded-[25px] font-black uppercase text-[10px] tracking-widest">Master bilan bog'lanish</button>
         </div>
     </div>
 
-    <nav class="fixed bottom-0 left-0 w-full h-24 bg-black/90 border-t border-white/5 flex justify-around items-center z-50 backdrop-blur-lg">
-        <div class="nav-btn active-nav" onclick="location.reload()"><i class="fas fa-th-large"></i></div>
-        <div class="nav-btn" onclick="document.getElementById('modal').style.display='flex'"><i class="fas fa-wallet"></i></div>
-        <div class="nav-btn" onclick="location.href='admin/'"><i class="fas fa-shield-halved"></i></div>
+    <nav class="fixed bottom-0 left-0 w-full h-24 bg-black/90 border-t border-white/5 flex justify-center gap-20 items-center z-50 backdrop-blur-lg">
+        <div class="nav-btn active-nav" onclick="location.reload()"><i class="fas fa-home"></i></div>
+        <div class="nav-btn" onclick="document.getElementById('modal').style.display='flex'"><i class="fas fa-gem"></i></div>
     </nav>
 
     <script>
-        // Ma'lumotlar bazasi
         let db = JSON.parse(localStorage.getItem('nexus_v11')) || { cr: 0, mode: 'normal' };
 
         function sync() {
@@ -87,13 +75,13 @@
             if(db.cr >= p) {
                 db.cr -= p;
                 sync();
-                alert("✅ Buyurtma qabul qilindi! Master tez orada siz bilan bog'lanadi.");
+                alert("✅ Buyurtma Masterga yuborildi!");
             } else {
                 document.getElementById('modal').style.display = 'flex';
             }
         }
 
-        // Admin paneldagi o'zgarishlarni real-time kuzatish
+        // Admin o'zgarishlarini kuzatish
         setInterval(() => {
             let latest = JSON.parse(localStorage.getItem('nexus_v11'));
             if(latest && latest.cr !== db.cr) {
