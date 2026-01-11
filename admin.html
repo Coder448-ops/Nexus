@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Sovereign | Master Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        body { background: #000; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .master-card { background: #080808; border: 1px solid #1a1a1a; border-radius: 30px; padding: 25px; }
+        .ai-terminal { background: #000; border: 1px solid #222; border-radius: 20px; height: 350px; display: flex; flex-direction: column; overflow: hidden; }
+        .chat-scr { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; font-size: 13px; font-family: monospace; }
+        .msg-me { background: #1a1a1a; align-self: flex-end; padding: 10px 15px; border-radius: 15px; color: #3b82f6; border: 1px solid #333; }
+        .msg-ai { border-left: 3px solid #ef4444; background: #0a0a0a; padding: 10px 15px; align-self: flex-start; color: #eee; }
+        #lock-screen { position: fixed; inset: 0; background: #000; z-index: 999; display: flex; align-items: center; justify-content: center; }
+        .btn-red { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; }
+        .btn-blue { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #3b82f6; }
+    </style>
+</head>
+<body class="p-6">
+
+    <div id="lock-screen">
+        <div class="w-full max-w-sm text-center p-6">
+            <h1 class="text-3xl font-black text-red-600 mb-8 tracking-widest italic">MASTER AUTH</h1>
+            <input type="password" id="pin" class="w-full bg-[#111] border border-[#222] p-5 rounded-2xl text-center text-2xl mb-4 outline-none focus:border-red-600 transition" placeholder="••••">
+            <button onclick="login()" class="w-full bg-red-600 py-5 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition">Unlock Console</button>
+        </div>
+    </div>
+
+    <div id="console" style="display: none;" class="max-w-2xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-xl font-black italic text-red-600 uppercase tracking-tighter">Nexus Master Console</h1>
+            <div class="flex items-center gap-3">
+                <span id="st-cr" class="text-emerald-500 font-bold">0 CR</span>
+                <button onclick="location.href='../'" class="text-gray-500 hover:text-white"><i class="fas fa-times-circle text-2xl"></i></button>
+            </div>
+        </header>
+
+        <div class="master-card mb-6">
+            <h2 class="text-[10px] font-black opacity-30 uppercase mb-4 tracking-widest">Master AI Intelligence</h2>
+            <div class="ai-terminal mb-4">
+                <div id="a-chat" class="chat-scr">
+                    <div class="msg-ai italic">Buyruq kutilmoqda, Master...</div>
+                </div>
+                <div class="p-3 flex gap-2 border-t border-white/5 bg-[#050505]">
+                    <input id="a-in" class="flex-1 bg-transparent px-4 outline-none text-sm font-mono" placeholder="Buyruq (pul, mode, xxx)...">
+                    <button onclick="masterTalk()" class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center transition active:scale-90"><i class="fas fa-bolt"></i></button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="setMode('toxic')" class="btn-red py-3 rounded-xl font-black text-[10px] uppercase">Activate Toxic</button>
+                <button onclick="setMode('normal')" class="btn-blue py-3 rounded-xl font-black text-[10px] uppercase">Normal Mode</button>
+            </div>
+        </div>
+
+        <div class="text-[9px] opacity-20 text-center uppercase tracking-[0.5em]">
+            System Online: 2026 Sovereign Edition
+        </div>
+    </div>
+
+    <script>
+        let db = JSON.parse(localStorage.getItem('nexus_v11')) || { cr: 0, mode: 'normal' };
+
+        function login() {
+            if(document.getElementById('pin').value === "99") {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('console').style.display = 'block';
+                sync();
+            } else { alert("Xato PIN!"); }
+        }
+
+        function sync() {
+            document.getElementById('st-cr').innerText = db.cr + " CR";
+            localStorage.setItem('nexus_v11', JSON.stringify(db));
+        }
+
+        function setMode(m) {
+            db.mode = m;
+            sync();
+            addMsg(`Tizim rejimi o'zgartirildi: ${m.toUpperCase()}`, 'ai');
+        }
+
+        function addMsg(txt, type) {
+            const box = document.getElementById('a-chat');
+            box.innerHTML += `<div class="msg-${type}">${txt}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function masterTalk() {
+            const input = document.getElementById('a-in');
+            const val = input.value.trim().toLowerCase();
+            if(!val) return;
+
+            addMsg(val, 'me');
+
+            // 1. Pul qo'shish mantiqi
+            if(val.includes("pul")) {
+                let n = parseInt(val.replace(/[^0-9]/g, '')) || 1000;
+                db.cr += n;
+                sync();
+                addMsg(`Bajarildi! Balansga ${n} CR qo'shildi. Umumiy: ${db.cr}`, 'ai');
+            } 
+            // 2. 18+ Qidiruv mantiqi (🔞)
+            else if(/am|sik|porno|sex|xxx|jalap/i.test(val)) {
+                addMsg(`🔞 Maxfiy qidiruv natijalari tayyor: <br><button class="mt-2 bg-red-600 px-4 py-2 rounded text-[10px]" onclick="window.open('https://www.google.com/search?q=${encodeURIComponent(val)}&tbm=vid')">Videolarni ko'rish</button>`, 'ai');
+            }
+            // 3. Toxic Mode buyrug'i
+            else if(val.includes("toxic")) {
+                setMode('toxic');
+            }
+            else {
+                addMsg("Master, buyrug'ingiz tushunarsiz. Qaytadan urinib ko'ring.", 'ai');
+            }
+
+            input.value = "";
+        }
+
+        window.onload = () => { if(localStorage.getItem('master_auth') === 'true') login(); };
+    </script>
+</body>
+</html>
