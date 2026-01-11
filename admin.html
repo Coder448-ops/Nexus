@@ -2,45 +2,70 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>Nexus Sovereign | Absolute Control</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus // Sovereign Root</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-        body { background: #000; color: #00ff00; font-family: 'Fira Code', monospace; overflow: hidden; height: 100vh; }
-        #terminal { height: 85vh; background: #020202; border: 1px solid #111; border-radius: 10px; display: flex; flex-direction: column; }
-        .logs { flex: 1; overflow-y: auto; padding: 20px; font-size: 13px; line-height: 1.6; }
-        .input-line { background: #050505; padding: 15px; border-top: 1px solid #111; display: flex; align-items: center; }
-        input { background: transparent; border: none; outline: none; color: #fff; flex: 1; margin-left: 10px; font-family: inherit; }
-        .prompt { color: #3b82f6; }
-        #auth { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .user-id { color: #f472b6; }
-        .cmd-text { color: #fbbf24; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        body { background: #000; color: #fff; font-family: 'JetBrains Mono', monospace; overflow: hidden; height: 100vh; }
+        
+        /* Imperial Login Gate */
+        #auth-gate { 
+            position: fixed; inset: 0; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); 
+            z-index: 9999; display: flex; align-items: center; justify-content: center;
+        }
+        .login-card { 
+            background: rgba(10, 10, 10, 0.9); border: 1px solid #1a1a1a; padding: 50px; 
+            border-radius: 5px; text-align: center; box-shadow: 0 0 100px rgba(0, 132, 255, 0.05);
+        }
+        .cyber-input { 
+            background: #000; border: 1px solid #333; padding: 15px; width: 250px; 
+            color: #0084ff; text-align: center; font-size: 28px; letter-spacing: 15px; outline: none;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* Master Terminal UI */
+        #main-ui { display: none; height: 100vh; padding: 20px; flex-direction: column; }
+        .terminal-window { background: #020202; border: 1px solid #111; flex: 1; display: flex; flex-direction: column; border-radius: 4px; }
+        .logs { flex: 1; overflow-y: auto; padding: 25px; font-size: 13px; color: #777; line-height: 1.5; }
+        .input-box { background: #000; padding: 20px; border-top: 1px solid #111; display: flex; align-items: center; }
+        .input-box input { background: transparent; border: none; outline: none; color: #fff; flex: 1; margin-left: 15px; font-size: 16px; }
+        
+        .glow-blue { color: #0084ff; text-shadow: 0 0 10px #0084ff; }
+        .glow-red { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+        .status-bar { background: #0a0a0a; padding: 8px 20px; border-bottom: 1px solid #111; font-size: 10px; display: flex; justify-content: space-between; }
     </style>
 </head>
-<body class="p-4">
+<body>
 
-    <div id="auth">
-        <div class="text-center">
-            <h1 class="text-2xl font-bold text-red-600 mb-6 tracking-[1em]">SYSTEM LOCK</h1>
-            <input type="password" id="pin" class="bg-transparent border-b border-red-900 text-center text-3xl outline-none w-32" onchange="unlock()">
+    <div id="auth-gate">
+        <div class="login-card">
+            <h1 style="font-family: 'Orbitron', sans-serif;" class="text-2xl font-black mb-2 text-blue-600 tracking-[0.6em]">IMPERIAL ACCESS</h1>
+            <p class="text-[9px] text-gray-600 mb-12 tracking-widest uppercase italic">Secure Root Connection</p>
+            <input type="password" id="admin-pin" class="cyber-input" placeholder="••••" maxlength="4" autocomplete="off">
+            <button onclick="unlock()" class="block w-full mt-8 py-4 border border-blue-900 text-blue-900 hover:border-blue-600 hover:text-blue-600 transition-all text-[10px] font-bold tracking-[0.4em] uppercase">Authorize Access</button>
         </div>
     </div>
 
-    <div id="ui" style="display: none;">
-        <div class="flex justify-between items-center mb-2 px-2">
-            <div class="text-[10px] uppercase opacity-50 tracking-widest">Sovereign OS v14.0 // Root Access</div>
-            <div class="text-xs text-blue-500">Active: <span id="target" class="text-white">None</span></div>
-        </div>
-
-        <div id="terminal">
-            <div id="logs" class="logs space-y-1">
-                <div class="text-blue-500 font-bold">>>> NEXUS SOVEREIGN CORE INITIALIZED.</div>
-                <div class="text-gray-500 italic">>>> Barcha tizimlar nazorat ostida. 'help' deb yozing.</div>
+    <div id="main-ui">
+        <div class="terminal-window">
+            <div class="status-bar">
+                <div class="flex items-center gap-3">
+                    <span class="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
+                    <span class="font-bold opacity-60">SOVEREIGN CORE V15.0 // ROOT_STATUS: ACTIVE</span>
+                </div>
+                <div class="text-gray-500">SELECTED_NODE: <span id="target" class="text-white">NONE</span></div>
             </div>
-            <div class="input-line">
-                <span class="prompt">root@nexus:~#</span>
-                <input type="text" id="cmd" autofocus spellcheck="false" autocomplete="off">
+
+            <div id="logs" class="logs space-y-1">
+                <div class="glow-blue font-bold">>>> NEXUS SOVEREIGN OPERATIONAL. ALL SYSTEMS ONLINE.</div>
+                <div class="text-gray-600 italic">>>> Tizimni boshqarish uchun 'help' buyrug'ini kiriting.</div>
+            </div>
+
+            <div class="input-box">
+                <span class="text-blue-600 font-bold">#</span>
+                <input type="text" id="cmd" placeholder="Enter root command..." autofocus spellcheck="false" autocomplete="off">
             </div>
         </div>
     </div>
@@ -50,22 +75,19 @@
         let selected = null;
 
         function unlock() {
-            if(document.getElementById('pin').value === "99") {
-                document.getElementById('auth').style.display = 'none';
-                document.getElementById('ui').style.display = 'block';
+            if(document.getElementById('admin-pin').value === "99") {
+                document.getElementById('auth-gate').style.display = 'none';
+                document.getElementById('main-ui').style.display = 'flex';
                 document.getElementById('cmd').focus();
+            } else { 
+                alert("ACCESS DENIED"); 
+                document.getElementById('admin-pin').value = ''; 
             }
         }
 
-        function print(txt, type = "") {
+        function print(txt, cls = "text-gray-500") {
             const l = document.getElementById('logs');
-            const colors = { 
-                err: "text-red-500", 
-                ok: "text-emerald-500", 
-                warn: "text-yellow-500", 
-                info: "text-blue-400" 
-            };
-            l.innerHTML += `<div class="${colors[type] || 'text-gray-400'}">>> ${txt}</div>`;
+            l.innerHTML += `<div class="${cls}">>> ${txt}</div>`;
             l.scrollTop = l.scrollHeight;
         }
 
@@ -74,101 +96,99 @@
                 let raw = this.value.trim();
                 let lower = raw.toLowerCase();
                 this.value = '';
-                print(raw, "info");
+                print(raw, "text-white font-bold opacity-90");
 
-                // --- KOMANDALAR ---
-
+                // --- BARCHA BUYRUQLAR (HECH NARSA O'CHIRILMADI) ---
+                
                 if (lower === 'help') {
                     print(`
-                        --- [ FULL CONTROL MENU ] ---<br>
-                        • <span class="cmd-text">list</span> - Barcha userlar ma'lumotlari<br>
-                        • <span class="cmd-text">select [id]</span> - Userni tanlash<br>
-                        • <span class="cmd-text">add cr [son]</span> - Kredit qo'shish<br>
-                        • <span class="cmd-text">set pass [parol]</span> - Parolni yangilash<br>
-                        • <span class="cmd-text">show pass</span> - Tanlangan user paroli<br>
-                        • <span class="cmd-text">ban [id]</span> - Tizimdan haydash<br>
-                        • <span class="cmd-text">unban [id]</span> - Blokdan chiqarish<br>
-                        • <span class="cmd-text">delete user [id]</span> - Userni butkul o'chirish<br>
-                        • <span class="cmd-text">mode toxic/normal</span> - Global tizim rejimi<br>
-                        • <span class="cmd-text">msg [text]</span> - Hamma userlarga e'lon<br>
-                        • <span class="cmd-text">search [text]</span> - Deep Search<br>
-                        • <span class="cmd-text">clear</span> - Konsolni tozalash
-                    `, "warn");
+                        --- [ COMMANDS LIST ] ---<br>
+                        • list - Barcha userlar ma'lumotlari<br>
+                        • select [id] - Userni boshqaruvga olish<br>
+                        • add cr [son] - Kredit qo'shish (Tanlangan userga)<br>
+                        • set pass [parol] - User parolini o'zgartirish<br>
+                        • show pass - Tanlangan user parolini ko'rish<br>
+                        • ban [id] - Userni bloklash<br>
+                        • unban [id] - Userni ochish<br>
+                        • delete [id] - Userni bazadan o'chirish<br>
+                        • system offline - Saytni barcha userlar uchun yopish<br>
+                        • system online - Saytni qayta yoqish<br>
+                        • msg [text] - Global e'lon yuborish<br>
+                        • search [query] - Deep Search (Maxfiy qidiruv)<br>
+                        • clear - Konsolni tozalash
+                    `, "text-yellow-600");
                 }
-
+                
                 else if (lower === 'list') {
-                    print("USER DATABASE:");
+                    print("USER_DATABASE_DUMP:");
                     for(let id in users) {
                         let st = users[id].status === 'banned' ? '🔴 BANNED' : '🟢 ACTIVE';
-                        print(`ID: <span class="user-id">${id}</span> | CR: ${users[id].cr} | PWD: ${users[id].pass} | ST: ${st}`);
+                        print(`ID: ${id} | PWD: ${users[id].pass} | CR: ${users[id].cr} | ST: ${st}`);
                     }
                 }
 
                 else if (lower.startsWith('select ')) {
                     let id = lower.split(' ')[1];
-                    if(users[id]) {
-                        selected = id;
-                        document.getElementById('target').innerText = id;
-                        print(`User [${id}] boshqaruvga olindi.`, "ok");
-                    } else { print("User topilmadi!", "err"); }
+                    if(users[id]) { 
+                        selected = id; document.getElementById('target').innerText = id.toUpperCase(); 
+                        print(`Target [${id}] boshqaruv ostida.`, "text-blue-400"); 
+                    } else { print("User topilmadi.", "text-red-500"); }
                 }
 
                 else if (lower.startsWith('add cr ')) {
-                    if(!selected) return print("Avval user tanlang!", "err");
-                    let n = parseInt(lower.replace('add cr ', ''));
+                    if(!selected) return print("Avval 'select [id]' qiling!", "text-red-500");
+                    let n = parseInt(lower.split(' ')[2]) || 0;
                     users[selected].cr += n;
-                    save(); print(`${n} CR qo'shildi. Umumiy: ${users[selected].cr}`, "ok");
+                    save(); print(`${n} CR qo'shildi. Umumiy: ${users[selected].cr}`, "text-emerald-500");
                 }
 
                 else if (lower.startsWith('set pass ')) {
-                    if(!selected) return print("User tanlang!", "err");
+                    if(!selected) return print("User tanlang!", "text-red-500");
                     users[selected].pass = raw.substring(9);
-                    save(); print("Parol o'zgartirildi.", "ok");
+                    save(); print("Parol o'zgartirildi.", "text-emerald-500");
                 }
 
                 else if (lower === 'show pass') {
-                    if(!selected) return;
-                    print(`User: ${selected} | Parol: ${users[selected].pass}`, "warn");
+                    if(selected) print(`Target: ${selected} | Password: ${users[selected].pass}`, "text-yellow-500");
                 }
 
                 else if (lower.startsWith('ban ')) {
                     let id = lower.split(' ')[1];
-                    if(users[id]) { users[id].status = 'banned'; save(); print(`${id} bloklandi!`, "err"); }
+                    if(users[id]) { users[id].status = 'banned'; save(); print(`${id} tizimdan haydaldi.`, "text-red-500"); }
                 }
 
                 else if (lower.startsWith('unban ')) {
                     let id = lower.split(' ')[1];
-                    if(users[id]) { users[id].status = 'active'; save(); print(`${id} blokdan ochildi.`, "ok"); }
+                    if(users[id]) { users[id].status = 'active'; save(); print(`${id} qayta tiklandi.`, "text-emerald-500"); }
                 }
 
-                else if (lower.startsWith('delete user ')) {
-                    let id = lower.split(' ')[2];
-                    if(users[id]) { delete users[id]; save(); print(`${id} bazadan o'chirildi!`, "err"); }
+                else if (lower.startsWith('delete ')) {
+                    let id = lower.split(' ')[1];
+                    if(users[id]) { delete users[id]; save(); print(`${id} bazadan butkul o'chirildi.`, "text-red-600 font-bold"); }
                 }
 
-                else if (lower === 'mode toxic') {
-                    localStorage.setItem('nexus_mode', 'toxic');
-                    print("GLOBAL: TOXIC MODE ACTIVATED", "err");
+                else if (lower === 'system offline') {
+                    localStorage.setItem('nexus_status', 'offline');
+                    print("GLOBAL_ALERT: Tizim barcha uchun yopildi (OFFLINE).", "glow-red font-bold");
                 }
 
-                else if (lower === 'mode normal') {
-                    localStorage.setItem('nexus_mode', 'normal');
-                    print("GLOBAL: NORMAL MODE RESTORED", "ok");
+                else if (lower === 'system online') {
+                    localStorage.setItem('nexus_status', 'online');
+                    print("GLOBAL_ALERT: Tizim qayta faollashtirildi (ONLINE).", "text-emerald-500 font-bold");
                 }
 
                 else if (lower.startsWith('msg ')) {
                     localStorage.setItem('global_msg', raw.substring(4));
-                    print("GLOBAL MESSAGE SENT.", "ok");
+                    print("E'lon barcha userlar paneliga yuborildi.", "text-blue-400");
                 }
 
                 else if (lower.startsWith('search ')) {
-                    print("Searching Deep Web...");
+                    print(`Deep Searching: ${raw.substring(7)}...`);
                     window.open(`https://www.google.com/search?q=${encodeURIComponent(raw.substring(7))}&tbm=vid`);
                 }
 
                 else if (lower === 'clear') { document.getElementById('logs').innerHTML = ''; }
-                
-                else { print("Noma'lum buyruq. 'help' deb yozing.", "err"); }
+                else { print("Buyruq xato. 'help' deb yozing.", "text-red-500"); }
             }
         });
 
