@@ -8,88 +8,101 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
-        body { background: #000; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .card { background: linear-gradient(145deg, #0a0a0a, #111); border: 1px solid #222; border-radius: 25px; padding: 20px; margin-bottom: 15px; }
-        .ai-box { background: #050505; border: 1px solid #1a1a1a; border-radius: 25px; height: 320px; display: flex; flex-direction: column; overflow: hidden; }
-        .chat-scr { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
-        .msg { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-weight: 600; }
-        .msg-me { background: #3b82f6; align-self: flex-end; }
-        .msg-ai { background: #111; align-self: flex-start; border-left: 3px solid #3b82f6; }
-        /* Modal dizayni */
-        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: #0a0a0a; border: 1px solid #333; border-radius: 30px; padding: 30px; width: 100%; max-width: 400px; text-align: center; }
+        body { background: #000; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        .card { background: linear-gradient(145deg, #0a0a0a, #111); border: 1px solid #222; border-radius: 25px; padding: 25px; margin-bottom: 20px; transition: 0.3s; }
+        .card:hover { border-color: #3b82f6; transform: translateY(-5px); }
+        #modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(10px); }
+        .nav-btn { font-size: 22px; color: #444; transition: 0.3s; cursor: pointer; }
+        .nav-btn:hover { color: #3b82f6; }
+        .active-nav { color: #3b82f6; }
     </style>
 </head>
-<body class="p-4 pb-24">
+<body class="p-6 pb-28">
 
-    <header class="fixed top-0 left-0 w-full z-50 p-4 flex justify-between items-center bg-black/90 border-b border-white/5">
-        <h1 class="font-black text-blue-500 uppercase text-xs tracking-widest italic">Nexus Sovereign</h1>
-        <div class="bg-blue-600/10 px-4 py-1 rounded-full border border-blue-500/30 text-blue-500 font-black">
-            <span id="cr-tag">0</span> <span class="text-[8px]">CR</span>
+    <header class="fixed top-0 left-0 w-full z-50 p-5 flex justify-between items-center bg-black/80 border-b border-white/5 backdrop-blur-md">
+        <h1 class="font-black text-blue-500 uppercase text-sm tracking-[0.2em] italic">Nexus Sovereign</h1>
+        <div class="bg-blue-600/10 px-5 py-2 rounded-2xl border border-blue-500/30 text-blue-500 font-black flex items-center gap-2">
+            <span id="cr-tag" class="text-lg">0</span>
+            <span class="text-[10px] opacity-60">CR</span>
         </div>
     </header>
 
-    <div class="mt-20">
-        <h2 class="text-[10px] font-black uppercase opacity-30 mb-4 tracking-widest">Premium Xizmatlar</h2>
-        
-        <div class="card flex justify-between items-center border-l-4 border-l-blue-600">
-            <div><h3 class="font-black text-sm uppercase italic">Standard Logo</h3><p class="text-[9px] opacity-40">HQ Branding</p></div>
-            <button onclick="buy(100)" class="bg-blue-600 px-6 py-2 rounded-xl text-[10px] font-black uppercase">100 CR</button>
-        </div>
+    <main class="mt-24 max-w-lg mx-auto">
+        <div class="mb-10">
+            <h2 class="text-[11px] font-black uppercase opacity-40 mb-6 tracking-[0.3em]">Premium Portfolio Services</h2>
+            
+            <div class="card flex justify-between items-center border-l-4 border-l-blue-600">
+                <div>
+                    <h3 class="font-black text-base uppercase italic tracking-tight">Standard Logo</h3>
+                    <p class="text-[10px] opacity-40 mt-1">High-Quality Vector Design</p>
+                </div>
+                <button onclick="buy(100)" class="bg-blue-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition active:scale-90">100 CR</button>
+            </div>
 
-        <div class="card flex justify-between items-center border-l-4 border-l-purple-600">
-            <div><h3 class="font-black text-sm uppercase italic text-purple-500">Logo + Banner</h3><p class="text-[9px] opacity-40">Pro Identity</p></div>
-            <button onclick="buy(250)" class="bg-purple-600 px-6 py-2 rounded-xl text-[10px] font-black uppercase">250 CR</button>
-        </div>
+            <div class="card flex justify-between items-center border-l-4 border-l-purple-600">
+                <div>
+                    <h3 class="font-black text-base uppercase italic tracking-tight text-purple-500">Logo + Banner</h3>
+                    <p class="text-[10px] opacity-40 mt-1">Full Branding Identity Pack</p>
+                </div>
+                <button onclick="buy(250)" class="bg-purple-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-purple-700 transition active:scale-90">250 CR</button>
+            </div>
 
-        <div class="ai-box mt-6">
-            <div id="u-chat" class="chat-scr"></div>
-            <div class="p-3 flex gap-2">
-                <input id="u-in" class="flex-1 bg-white/5 rounded-xl px-4 text-xs outline-none border border-white/5" placeholder="Savol...">
-                <button onclick="talk()" class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center"><i class="fas fa-paper-plane text-[10px]"></i></button>
+            <div class="card flex justify-between items-center border-l-4 border-l-emerald-600">
+                <div>
+                    <h3 class="font-black text-base uppercase italic tracking-tight text-emerald-500">Social Kit</h3>
+                    <p class="text-[10px] opacity-40 mt-1">Profiles & Story Templates</p>
+                </div>
+                <button onclick="buy(150)" class="bg-emerald-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition active:scale-90">150 CR</button>
             </div>
         </div>
-    </div>
+    </main>
 
     <div id="modal" onclick="this.style.display='none'">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <i class="fas fa-gem text-4xl text-blue-500 mb-4"></i>
-            <h3 class="font-black text-lg mb-2">Kredit To'ldirish</h3>
-            <p class="text-xs opacity-50 mb-6">Kredit sotib olish uchun Master bilan bog'laning.</p>
-            <button onclick="window.open('https://t.me/logo_designer21', '_blank')" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-xs">Masterga Yozish</button>
+        <div class="bg-[#0a0a0a] border border-white/10 p-10 rounded-[40px] text-center w-full max-w-sm" onclick="event.stopPropagation()">
+            <div class="w-20 h-20 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/30">
+                <i class="fas fa-gem text-3xl text-blue-500"></i>
+            </div>
+            <h3 class="font-black text-xl mb-3">Balansni To'ldirish</h3>
+            <p class="text-xs opacity-40 mb-8 leading-relaxed">Sizning balansingizda mablag' yetarli emas. Kredit sotib olish uchun Master bilan bog'laning.</p>
+            <button onclick="window.open('https://t.me/SizningTelegramLink', '_blank')" class="w-full bg-blue-600 py-5 rounded-[25px] font-black uppercase text-[11px] tracking-widest hover:shadow-lg hover:shadow-blue-600/20 transition">Masterga yozish</button>
         </div>
     </div>
 
-    <nav class="fixed bottom-0 left-0 w-full h-20 bg-black/95 border-t border-white/5 flex justify-around items-center z-50">
-        <div class="text-xl text-blue-600"><i class="fas fa-home"></i></div>
-        <div onclick="document.getElementById('modal').style.display='flex'" class="text-xl text-gray-400"><i class="fas fa-wallet"></i></div>
-        <div onclick="location.href='admin/'" class="text-xl text-gray-800"><i class="fas fa-crown"></i></div>
+    <nav class="fixed bottom-0 left-0 w-full h-24 bg-black/90 border-t border-white/5 flex justify-around items-center z-50 backdrop-blur-lg">
+        <div class="nav-btn active-nav" onclick="location.reload()"><i class="fas fa-th-large"></i></div>
+        <div class="nav-btn" onclick="document.getElementById('modal').style.display='flex'"><i class="fas fa-wallet"></i></div>
+        <div class="nav-btn" onclick="location.href='admin/'"><i class="fas fa-shield-halved"></i></div>
     </nav>
 
     <script>
+        // Ma'lumotlar bazasi
         let db = JSON.parse(localStorage.getItem('nexus_v11')) || { cr: 0, mode: 'normal' };
+
         function sync() {
             document.getElementById('cr-tag').innerText = db.cr;
             localStorage.setItem('nexus_v11', JSON.stringify(db));
         }
-        function talk() {
-            let input = document.getElementById('u-in');
-            let box = document.getElementById('u-chat');
-            if(!input.value) return;
-            box.innerHTML += `<div class="msg msg-me">${input.value}</div>`;
-            setTimeout(() => {
-                let res = db.mode === 'toxic' ? "Nimaga qarayapsan?" : "Yordam kerakmi?";
-                box.innerHTML += `<div class="msg msg-ai">${res}</div>`;
-                box.scrollTop = box.scrollHeight;
-            }, 400);
-            input.value = "";
-        }
+
         function buy(p) {
-            if(db.cr >= p) { db.cr -= p; sync(); alert("Sotib olindi!"); }
-            else { document.getElementById('modal').style.display='flex'; }
+            if(db.cr >= p) {
+                db.cr -= p;
+                sync();
+                alert("✅ Buyurtma qabul qilindi! Master tez orada siz bilan bog'lanadi.");
+            } else {
+                document.getElementById('modal').style.display = 'flex';
+            }
         }
+
+        // Admin paneldagi o'zgarishlarni real-time kuzatish
+        setInterval(() => {
+            let latest = JSON.parse(localStorage.getItem('nexus_v11'));
+            if(latest && latest.cr !== db.cr) {
+                db = latest;
+                sync();
+            }
+        }, 1000);
+
         window.onload = sync;
     </script>
 </body>
 </html>
-
