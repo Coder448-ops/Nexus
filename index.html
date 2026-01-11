@@ -9,10 +9,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Orbitron:wght@900&display=swap');
         body { background: #000; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
-        .nexus-card { background: #080808; border: 1px solid #111; border-radius: 25px; padding: 25px; }
+        .glass { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nexus-card { background: #080808; border: 1px solid #111; border-radius: 25px; padding: 25px; margin-bottom: 15px; }
         .nexus-input { background: #0a0a0a; border: 1px solid #222; border-radius: 18px; padding: 16px; width: 100%; color: #fff; outline: none; }
         #auth-screen { position: fixed; inset: 0; background: #000; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        #offline-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        #offline-screen { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
         .status-msg { font-size: 10px; font-weight: bold; text-transform: uppercase; margin-top: 10px; min-height: 15px; }
         .hidden { display: none !important; }
     </style>
@@ -20,111 +21,103 @@
 <body class="p-4 pb-28">
 
     <div id="offline-screen">
-        <h1 style="font-family: 'Orbitron', sans-serif;" class="text-2xl font-black text-red-600 tracking-widest uppercase">System Offline</h1>
+        <h1 style="font-family: 'Orbitron', sans-serif;" class="text-2xl font-black text-red-600 tracking-[0.3em]">SYSTEM OFFLINE</h1>
     </div>
 
     <div id="auth-screen">
-        <div class="w-full max-w-sm nexus-card">
+        <div class="w-full max-w-sm nexus-card text-center">
             <div id="login-box">
-                <h2 class="text-2xl font-black mb-6 text-blue-500 uppercase">Nexus Login</h2>
-                <div class="space-y-4">
+                <h2 class="text-2xl font-black mb-6 text-blue-500 uppercase italic">Login</h2>
+                <div class="space-y-4 text-left">
                     <input type="text" id="l-id" class="nexus-input" placeholder="User ID">
                     <input type="password" id="l-pass" class="nexus-input" placeholder="Password">
                     <button onclick="login()" class="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition">Access</button>
                     <div id="l-status" class="status-msg text-red-500 text-center"></div>
-                    <div class="flex justify-between text-[10px] font-bold uppercase px-2 mt-4">
-                        <span onclick="toggleAuth(true)" class="text-blue-400 cursor-pointer">Register</span>
-                        <span onclick="window.open('https://t.me/MasterLink')" class="text-gray-600 cursor-pointer">Forgot?</span>
-                    </div>
+                    <p onclick="toggleAuth(true)" class="text-center text-[10px] text-blue-400 font-bold uppercase mt-4 cursor-pointer">Registration</p>
                 </div>
             </div>
 
             <div id="signup-box" class="hidden">
-                <h2 class="text-2xl font-black mb-6 text-emerald-500 uppercase">Sign Up</h2>
-                <div class="space-y-4">
+                <h2 class="text-2xl font-black mb-6 text-emerald-500 uppercase italic">Sign Up</h2>
+                <div class="space-y-4 text-left">
                     <input type="text" id="s-name" class="nexus-input" placeholder="Ismingiz">
-                    <input type="text" id="s-id" class="nexus-input" placeholder="Yangi ID">
+                    <input type="text" id="s-id" class="nexus-input" placeholder="ID (masalan: master1)">
                     <input type="password" id="s-pass" class="nexus-input" placeholder="Parol">
-                    <button onclick="signup()" class="w-full bg-emerald-600 py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition">Create Account</button>
+                    <button onclick="signup()" class="w-full bg-emerald-600 py-4 rounded-2xl font-black uppercase text-xs active:scale-95 transition">Create Identity</button>
                     <div id="s-status" class="status-msg text-red-500 text-center"></div>
-                    <p onclick="toggleAuth(false)" class="text-center text-[10px] text-gray-500 font-bold uppercase mt-4 cursor-pointer">Back to Login</p>
+                    <p onclick="toggleAuth(false)" class="text-center text-[10px] text-gray-500 font-bold uppercase mt-4 cursor-pointer">Back</p>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="main-ui" class="hidden pt-24">
-        <header class="fixed top-0 left-0 w-full p-5 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/5 z-50">
+        <header class="fixed top-0 left-0 w-full p-5 flex justify-between items-center glass z-50">
             <div>
-                <h1 id="u-name" class="font-black text-sm uppercase text-blue-500 italic">Master</h1>
+                <h1 id="u-name" class="font-black text-sm uppercase text-blue-500 italic">User</h1>
                 <p id="u-id-display" class="text-[8px] opacity-40 font-mono"></p>
             </div>
             <div class="bg-blue-600/10 px-4 py-2 rounded-xl border border-blue-500/20 text-blue-500 font-black">
-                <span id="u-cr">0</span> <span class="text-[10px]">CR</span>
+                <span id="u-cr" class="text-lg">0</span> <span class="text-[10px] opacity-50">CR</span>
             </div>
         </header>
 
         <main class="max-w-lg mx-auto space-y-4">
-            <div id="global-msg-box" class="hidden bg-blue-600/10 border border-blue-500/20 p-4 rounded-2xl mb-4">
-                <p id="global-text" class="text-xs text-blue-400 font-bold"></p>
+            <div id="global-msg-box" class="hidden bg-blue-600/10 border border-blue-500/20 p-4 rounded-2xl animate-pulse">
+                <p id="global-text" class="text-xs text-blue-400 font-bold text-center"></p>
             </div>
 
+            <h2 class="text-[10px] font-black uppercase opacity-30 tracking-[0.3em] mb-4">Master Services</h2>
+            
             <div class="nexus-card flex justify-between items-center border-l-4 border-l-blue-600">
-                <div><h3 class="font-black text-sm uppercase">Standard Logo</h3><p id="buy-status-1" class="text-[9px] font-bold uppercase"></p></div>
-                <button onclick="buy(100, 'buy-status-1')" class="bg-blue-600 px-6 py-2 rounded-xl text-[10px] font-black">100 CR</button>
+                <div>
+                    <h3 class="font-black text-sm uppercase">Standard Logo</h3>
+                    <p id="bs-1" class="text-[9px] font-bold uppercase mt-1 min-h-[12px]"></p>
+                </div>
+                <button onclick="buy(100, 'bs-1')" class="bg-blue-600 px-6 py-3 rounded-xl text-[10px] font-black active:scale-90 transition">100 CR</button>
+            </div>
+
+            <div class="nexus-card flex justify-between items-center border-l-4 border-l-purple-600">
+                <div>
+                    <h3 class="font-black text-sm uppercase text-purple-500">Logo + Banner</h3>
+                    <p id="bs-2" class="text-[9px] font-bold uppercase mt-1 min-h-[12px]"></p>
+                </div>
+                <button onclick="buy(250, 'bs-2')" class="bg-purple-600 px-6 py-3 rounded-xl text-[10px] font-black active:scale-90 transition">250 CR</button>
             </div>
         </main>
+
+        <nav class="fixed bottom-0 left-0 w-full h-20 glass flex justify-around items-center z-50">
+            <div class="text-blue-600 text-xl"><i class="fas fa-home"></i></div>
+            <div onclick="location.reload()" class="text-gray-600 text-xl"><i class="fas fa-sign-out-alt"></i></div>
+        </nav>
     </div>
 
     <script>
-        // Bazani xatolarsiz yuklash va saqlash
-        const getUsers = () => {
-            const data = localStorage.getItem('nexus_users');
-            return data ? JSON.parse(data) : {};
-        };
-        const saveUsers = (users) => localStorage.setItem('nexus_users', JSON.stringify(users));
-
+        const getUsers = () => JSON.parse(localStorage.getItem('nexus_users')) || {};
+        const saveUsers = (u) => localStorage.setItem('nexus_users', JSON.stringify(u));
         let session = null;
 
-        function toggleAuth(showSignup) {
-            document.getElementById('login-box').classList.toggle('hidden', showSignup);
-            document.getElementById('signup-box').classList.toggle('hidden', !showSignup);
-            document.getElementById('l-status').innerText = "";
-            document.getElementById('s-status').innerText = "";
+        function toggleAuth(show) {
+            document.getElementById('login-box').classList.toggle('hidden', show);
+            document.getElementById('signup-box').classList.toggle('hidden', !show);
         }
 
         function signup() {
-            const name = document.getElementById('s-name').value;
-            const id = document.getElementById('s-id').value.trim().toLowerCase();
-            const pass = document.getElementById('s-pass').value;
-            const st = document.getElementById('s-status');
-
-            if(!name || !id || !pass) { st.innerText = "Hamma joyni to'ldiring!"; return; }
-            
+            const name = document.getElementById('s-name').value, id = document.getElementById('s-id').value.trim().toLowerCase(), pass = document.getElementById('s-pass').value, st = document.getElementById('s-status');
+            if(!name || !id || !pass) { st.innerText = "Barcha maydonlarni to'ldiring!"; return; }
             let users = getUsers();
-            if(users[id]) { st.innerText = "Bu ID band! Boshqa tanlang."; return; }
-
-            // Yangi user qo'shish (Eskilarni o'chirmasdan)
-            users[id] = { name: name, pass: pass, cr: 0, status: 'active' };
-            saveUsers(users);
-            
-            session = id;
-            enterSystem();
+            if(users[id]) { st.innerText = "ID band!"; return; }
+            users[id] = { name, pass, cr: 0, status: 'active' };
+            saveUsers(users); session = id; enterSystem();
         }
 
         function login() {
-            const id = document.getElementById('l-id').value.trim().toLowerCase();
-            const pass = document.getElementById('l-pass').value;
-            const st = document.getElementById('l-status');
+            const id = document.getElementById('l-id').value.trim().toLowerCase(), pass = document.getElementById('l-pass').value, st = document.getElementById('l-status');
             let users = getUsers();
-
             if(users[id] && users[id].pass === pass) {
-                if(users[id].status === 'banned') { st.innerText = "Siz bloklangansiz!"; return; }
-                session = id;
-                enterSystem();
-            } else {
-                st.innerText = "ID yoki Parol xato!";
-            }
+                if(users[id].status === 'banned') { st.innerText = "BLOCK!"; return; }
+                session = id; enterSystem();
+            } else { st.innerText = "ID yoki Parol xato!"; }
         }
 
         function enterSystem() {
@@ -134,14 +127,8 @@
         }
 
         function sync() {
-            const users = getUsers();
-            const status = localStorage.getItem('nexus_status');
-            const gMsg = localStorage.getItem('global_msg');
-
-            // System Status
+            const users = getUsers(), status = localStorage.getItem('nexus_status'), gMsg = localStorage.getItem('global_msg');
             document.getElementById('offline-screen').style.display = (status === 'offline') ? 'flex' : 'none';
-
-            // User UI Update
             if(session && users[session]) {
                 const u = users[session];
                 document.getElementById('u-name').innerText = u.name;
@@ -149,30 +136,22 @@
                 document.getElementById('u-id-display').innerText = "@" + session;
                 if(u.status === 'banned') location.reload();
             }
-
-            // Global Msg
             if(gMsg) {
                 document.getElementById('global-msg-box').classList.remove('hidden');
                 document.getElementById('global-text').innerText = gMsg;
-            }
+            } else { document.getElementById('global-msg-box').classList.add('hidden'); }
         }
 
         function buy(price, statusId) {
-            let users = getUsers();
-            const bSt = document.getElementById(statusId);
+            let users = getUsers(); const bSt = document.getElementById(statusId);
             if(users[session].cr >= price) {
-                users[session].cr -= price;
-                saveUsers(users);
-                sync();
-                bSt.innerText = "Muvaffaqiyatli!"; bSt.style.color = "#10b981";
-            } else {
-                bSt.innerText = "Mablag' kam!"; bSt.style.color = "#ef4444";
-            }
+                users[session].cr -= price; saveUsers(users); sync();
+                bSt.innerText = "SOTIB OLINDI!"; bSt.style.color = "#10b981";
+            } else { bSt.innerText = "MABLAG' KAM!"; bSt.style.color = "#ef4444"; }
             setTimeout(() => { bSt.innerText = ""; }, 3000);
         }
 
         setInterval(sync, 2000);
-        sync();
     </script>
 </body>
 </html>
